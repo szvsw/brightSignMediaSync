@@ -1,4 +1,5 @@
 LIBRARY "time.brs"
+LIBRARY "subtitler.brs"
 LIBRARY "oscBuilder.brs"
 LIBRARY "oscParser.brs"
 
@@ -142,6 +143,7 @@ function createSyncPlayer(_config as Object) as Object
   player.clock = createClock(player.config.syncUrl,player.password)
 
 
+
   ' Video port for events
   player.videoPort = createObject("roMessagePort")
 
@@ -153,6 +155,9 @@ function createSyncPlayer(_config as Object) as Object
 
   ' Load the currently selected video and report its duration
   player.loadVideoFile()
+
+  ' Create a subtitler engine
+  player.subtitler = createSubtitler(player)
 
   ' UDP Setup
   player.setupUDP()
@@ -627,6 +632,7 @@ function runMachines()
     m.handleUDP()
     m.transport()
     m.sync()
+    m.subtitler.update()
     m.firmwareCMS()
     m.contentCMS()
   end while
